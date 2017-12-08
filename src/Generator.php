@@ -14,8 +14,7 @@ use Twig_SimpleFilter;
  * @author    Evert Pot (https://evertpot.coom/)
  * @license   MIT
  */
-class Generator
-{
+class Generator {
     /**
      * Output directory.
      *
@@ -58,20 +57,23 @@ class Generator
      * @param string $linkTemplate
      * @param string $apiIndexFile
      */
-    function __construct(array $classDefinitions, $outputDir, $templateDir, $linkTemplate = '%c.md', $apiIndexFile = 'ApiIndex.md')
-    {
+    public function __construct(array $classDefinitions,
+                                 string $outputDir,
+                                 string $templateDir,
+                                 string $linkTemplate = '%c.md',
+                                 string $apiIndexFile = 'ApiIndex.md') {
+
         $this->classDefinitions = $classDefinitions;
-        $this->outputDir = $outputDir;
-        $this->templateDir = $templateDir;
-        $this->linkTemplate = $linkTemplate;
-        $this->apiIndexFile = $apiIndexFile;
+        $this->outputDir        = $outputDir;
+        $this->templateDir      = $templateDir;
+        $this->linkTemplate     = $linkTemplate;
+        $this->apiIndexFile     = $apiIndexFile;
     }
 
     /**
      * Starts the generator.
      */
-    function run()
-    {
+    public function run() {
         $loader = new Twig_Loader_Filesystem($this->templateDir, [
             'cache' => false,
             'debug' => true,
@@ -80,7 +82,7 @@ class Generator
         $twig = new Twig_Environment($loader);
 
         $GLOBALS['PHPDocMD_classDefinitions'] = $this->classDefinitions;
-        $GLOBALS['PHPDocMD_linkTemplate'] = $this->linkTemplate;
+        $GLOBALS['PHPDocMD_linkTemplate']     = $this->linkTemplate;
 
         $filter = new Twig_SimpleFilter('classLink', ['PHPDocMd\\Generator', 'classLink']);
         $twig->addFilter($filter);
@@ -111,8 +113,7 @@ class Generator
      *
      * @return array
      */
-    protected function createIndex()
-    {
+    protected function createIndex() {
         $tree = [];
 
         foreach ($this->classDefinitions as $className => $classInfo) {
@@ -167,10 +168,9 @@ class Generator
      *
      * @return string
      */
-    static function classLink($className, $label = null)
-    {
+    private static function classLink($className, $label = null) {
         $classDefinitions = $GLOBALS['PHPDocMD_classDefinitions'];
-        $linkTemplate = $GLOBALS['PHPDocMD_linkTemplate'];
+        $linkTemplate     = $GLOBALS['PHPDocMD_linkTemplate'];
 
         $returnedClasses = [];
 
@@ -193,4 +193,5 @@ class Generator
 
         return implode('|', $returnedClasses);
     }
+
 }
